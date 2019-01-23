@@ -20,20 +20,20 @@ export class Stage {
     window.addEventListener('resize', this.__onWindowResize, false)
   }
 
-  animate(){
-    window.requestAnimationFrame(__animate)
+  __animate(){
+    window.requestAnimationFrame(this.__animate.bind(this))
     let delta = this.clock.getDelta()
     this.mesh.rotation.x += delta * 0.5
     this.mesh.rotation.y += delta * 2
 
-    this.mesh.position.x += this.direction
+    this.mesh.position.x += this.direction * delta
     if (this.mesh.position.x > 2) {
       this.direction -= 1
     } else if (this.mesh.position.x < -2) {
       this.direction = 1
     }
 
-    this.renderer.render(this.scene, this.camera)
+    this.renderer.render(this.scene, this.scene.camera)
   }
 
   __setStage(){
@@ -54,10 +54,12 @@ export class Stage {
 
     let mesh = new Mesh(geometry, material)
     this.mesh = mesh
+    this.scene.add(mesh)
 
     let camera = new PerspectiveCamera(75, this.__displayRatio(), 0.1, 100)
     camera.position.set(0, 0, -3)
     camera.lookAt(mesh.position)
+    this.scene.camera = camera
 
     this.clock = new Clock()
   }
@@ -75,6 +77,7 @@ export class Stage {
   }
 
   render() {
+    this.__animate()
     return this.renderer.domElement
   }
 }
