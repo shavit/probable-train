@@ -1,9 +1,9 @@
 const path = require('path')
-const nodeExternals = require('webpack-node-externals')
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const WebpackMd5Hash = require('webpack-md5-hash');
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 const autoprefixer = require('autoprefixer')
 const webpack = require('webpack')
@@ -15,12 +15,11 @@ module.exports = {
   devServer: {
     contentBase: './dist',
     hot: true,
-    open: true,
+    open: false,
     host: 'localhost',
     port: 3000
   },
-  target: 'node',
-  externals: [nodeExternals()],
+  target: 'web',
   output: {
     filename: '[name].[hash].js',
     path: path.resolve(__dirname, 'dist')
@@ -47,6 +46,10 @@ module.exports = {
     ]
   },
   plugins: [
+    new CleanWebpackPlugin('dist', {}),
+    new MiniCssExtractPlugin({
+      filename: 'style.[contenthash].css'
+    }),
     new HtmlWebpackPlugin({
       title: 'Hot Module Replacement',
       inject: false,
@@ -55,9 +58,7 @@ module.exports = {
       filename: 'index.html'
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new MiniCssExtractPlugin({
-      filename: 'style.[contenthash].css'
-    }),
-    autoprefixer
+    autoprefixer,
+    new WebpackMd5Hash()
   ]
 }
