@@ -17,7 +17,9 @@ export class Stage {
     this.__setStage()
 
     // Resize events
-    window.addEventListener('resize', this.__onWindowResize, false)
+    this.__displayRatio = this.__displayRatio.bind(this)
+    this.__onWindowResize = this.__onWindowResize.bind(this)
+    window.addEventListener('resize', this.__onWindowResize.bind(this), false)
   }
 
   __animate(){
@@ -67,8 +69,8 @@ export class Stage {
   __onWindowResize(){
     // let wX = window.innerWidth / 2
     // let wY = window.innerHeight / 2
-    this.camera.aspect = this.__displayRatio()
-    camera.updateProjectionMatrix()
+    this.scene.camera.aspect = this.__displayRatio()
+    this.scene.camera.updateProjectionMatrix()
     this.renderer.setSize(window.innerWidth, window.innerHeight)
   }
 
