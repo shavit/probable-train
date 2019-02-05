@@ -62,6 +62,7 @@ export class Stage {
     camera.position.set(0, 0, -3)
     camera.lookAt(mesh.position)
     this.scene.camera = camera
+    this.renderer.setSize(window.innerWidth, window.innerHeight)
 
     this.clock = new Clock()
   }
